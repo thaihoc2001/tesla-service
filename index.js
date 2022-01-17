@@ -12,7 +12,9 @@ app.get('/',(req,res) => {
     res.send('Welcome to Tesla service');
 });
 
-// const ProductRouter
+const ProductRouter = require('./server/router/products.route');
+
+app.use('/api/product', ProductRouter);
 
 mongoose.connect(process.env.MONGO_URL_LOCAL,{
     useNewUrlParser: true,

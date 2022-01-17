@@ -1,13 +1,17 @@
 const mongoose = require('mongoose')
-const Image = require('./data_type/image.model')
+const Image = require('./data_type/imagesProduct.model')
 
 const product = new mongoose.Schema({
-    product_id: mongoose.ObjectId,
+    product_id: String,
     product_name: String,
     price_value: Number,
     discount: Number,
-    image: Image,
-    description: String
+    images: [Image],
+    description: String,
+    start_date: Date,
+    list_promotion_id: [],
+    product_category_id: String,
+    product_type_id: String
 })
 
 const productModel = mongoose.model('Product', product, 'product')
