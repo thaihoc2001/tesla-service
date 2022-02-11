@@ -10,5 +10,5 @@ const rating = new mongoose.Schema({
     start_date: Date
 })
 
-const promotionModel = mongoose.model('Promotion', promotion, 'promotion')
-module.exports = promotionModel;
+const ratingModel = mongoose.model('rating', rating, 'rating')
+module.exports = ratingModel;

@@ -13,8 +13,12 @@ app.get('/',(req,res) => {
 });
 
 const ProductRouter = require('./server/router/products.route');
+const ProductCategoryRouter = require('./server/router/productCategory.route');
+const ProductTypeRouter = require('./server/router/product-type.route');
 
-app.use('/api/product', ProductRouter);
+app.use('/product', ProductRouter);
+app.use('/category', ProductCategoryRouter);
+app.use('/product-type', ProductTypeRouter);
 
 mongoose.connect(process.env.MONGO_URL_LOCAL,{
     useNewUrlParser: true,

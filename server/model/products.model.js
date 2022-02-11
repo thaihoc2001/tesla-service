@@ -11,7 +11,8 @@ const product = new mongoose.Schema({
     start_date: Date,
     list_promotion_id: [],
     product_category_id: String,
-    product_type_id: String
+    product_type_id: String,
+    image_thumbnail: Image
 })
 
 const productModel = mongoose.model('Product', product, 'product')

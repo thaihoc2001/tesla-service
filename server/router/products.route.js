@@ -4,7 +4,8 @@ const upload = require('../utils/multer')
 const productController = require('../controller/products.controller')
 
 
-router.post('/', upload.array("images"), productController.postProduct)
+router.post('/', upload.any() , productController.postProduct)
 router.get('/', productController.getProducts);
+router.get('/:id', productController.getProductById);
 
 module.exports = router
