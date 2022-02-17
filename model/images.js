@@ -1,32 +1,33 @@
 'use strict'
+
 const {Model} = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class ProductType extends Model {}
-    ProductType.init({
+    class Images extends Model {}
+    Images.init({
         id: {
             type: DataTypes.BIGINT,
             primaryKey: true,
             autoIncrement: true
         },
-        name: {
-            type: DataTypes.STRING,
-        },
-        description: {
+        url: {
             type: DataTypes.STRING
+        },
+        cloudinary_id: {
+            type: DataTypes.STRING
+        },
+        type: {
+            type: DataTypes.STRING
+        },
+        product_id: {
+            type: DataTypes.BIGINT
         }
     }, {
         sequelize,
-        tableName: 'product-type',
+        tableName: 'images',
         underscored: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at'
     });
-    ProductType.associate = (models) => {
-        ProductType.hasMany(models.Products, {
-            as: 'products',
-            foreignKey: 'productType_id'
-        })
-    }
-    return ProductType;
+    return Images;
 }
