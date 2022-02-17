@@ -14,9 +14,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         description: {
             type: DataTypes.STRING
-        },
-        product_type_id: {
-            type: DataTypes.BIGINT
         }
     }, {
         sequelize,
