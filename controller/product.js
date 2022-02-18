@@ -50,9 +50,43 @@ const getProductById = async (req, res) => {
         return res.status(400).json(err);
     }
 }
+const getProductByCategory = async (req, res) => {
+    try {
+        const {category_id} = req.params;
+        const options = {
+            include: [{
+                model: Images,
+                as: 'images'
+            }],
+            where: {category_id: category_id}
+        }
+        const products = await Products.findAll(options);
+        return res.status(200).json(products);
+    }catch (err) {
+        return res.status(400).json(err);
+    }
+}
+const getProductByType = async (req, res) => {
+    try {
+        const {product_type_id} = req.params;
+        const options = {
+            include: [{
+                model: Images,
+                as: 'images'
+            }],
+            where: {product_type_id: product_type_id}
+        }
+        const products = await Products.findAll(options);
+        return res.status(200).json(products);
+    }catch (err) {
+        return res.status(400).json(err);
+    }
+}
 module.exports = {
     createProduct,
     getProducts,
-    getProductById
+    getProductById,
+    getProductByCategory,
+    getProductByType
 }
 
