@@ -8,7 +8,9 @@ const isAuthenticated = async (req, res, next) => {
         const access_token = req.headers["authorization"].split(" ")[1];
         const user = jwt.verify(access_token, config.AUTH_TOKEN_SECRET.ACCESS_TOKEN);
         if (user){
-            req.user = user;
+            if (user.role !== 'ADMIN'){
+                return res.status(400).json({success: false, message: "you do not have access"});
+            }
             return next();
         }
         return res.status(401).json({message: 'user not exist'});

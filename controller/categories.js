@@ -2,10 +2,6 @@ const {Categories} = require('../model');
 
 const createCategory = async (req, res) => {
     try {
-        const user = req.user;
-        if (user.role !== 'ADMIN'){
-            return res.status(400).json({success: false, message: "you do not have access"});
-        }
         const {name, description} = req.body;
         await Categories.create({
             name,
@@ -27,11 +23,7 @@ const getCategory = async (req, res) => {
 }
 const updateCategory = async (req, res) => {
     try {
-        const user = req.user;
         const {category_id} = req.params;
-        if (user.role !== "ADMIN"){
-            return res.status(400).json({success: false, message: "you do not have access"});
-        }
         const category = await Categories.findByPk(category_id);
         if (!category) {
             return res.status(400).json({success: false, message: "category not exists"})
@@ -52,9 +44,6 @@ const deleteCategory = async (req, res) => {
     try {
         const user = req.user;
         const {category_id} = req.params;
-        if (user.role !== "ADMIN") {
-            return res.status(400).json({success: false, message: "you do not have access"});
-        }
         const category = await Categories.findByPk(category_id);
         if (!category) {
             return res.status(400).json({success: false, message: "category not exists"})

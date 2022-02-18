@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         category_id: {
             type: DataTypes.BIGINT
         },
-        productType_id: {
+        product_type_id: {
             type: DataTypes.BIGINT
         }
     }, {

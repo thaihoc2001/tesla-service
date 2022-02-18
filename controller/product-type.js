@@ -2,10 +2,6 @@ const {ProductType} = require('../model');
 
 const createProductType = async (req, res) => {
     try {
-        const user = req.user;
-        if (user.role !== 'ADMIN'){
-            return res.status(400).json({success: false, message: "you do not have access"});
-        }
         const {name, description} = req.body;
         await ProductType.create({
             name,
@@ -27,11 +23,7 @@ const getProductType = async (req, res) => {
 }
 const updateProductType = async (req, res) => {
     try {
-        const user = req.user;
         const {productType_id} = req.params;
-        if (user.role !== "ADMIN"){
-            return res.status(400).json({success: false, message: "you do not have access"});
-        }
         const productType = await ProductType.findByPk(productType_id);
         if (!productType) {
             return res.status(400).json({success: false, message: "Product-type not exists"})
@@ -50,11 +42,7 @@ const updateProductType = async (req, res) => {
 }
 const deleteProductType = async (req, res) => {
     try {
-        const user = req.user;
         const {productType_id} = req.params;
-        if (user.role !== "ADMIN") {
-            return res.status(400).json({success: false, message: "you do not have access"});
-        }
         const category = await ProductType.findByPk(productType_id);
         if (!category) {
             return res.status(400).json({success: false, message: "category not exists"})
