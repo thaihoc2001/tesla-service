@@ -25,6 +25,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         product_type_id: {
             type: DataTypes.BIGINT
+        },
+        status: {
+            type: DataTypes.STRING
+        },
+        quantity: {
+            type: DataTypes.BIGINT
         }
     }, {
         sequelize,

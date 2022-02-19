@@ -40,7 +40,7 @@ const loginUser = async (req, res) => {
             },
             config.AUTH_TOKEN_SECRET.REFRESH_TOKEN,
             {
-                expiresIn: '24h'
+                expiresIn: config.LIFE_TIME_TOKEN.REFRESH_TOKEN
             }
         )
         return res.status(200).json({accessToken: accessToken,refreshToken: refreshToken});
@@ -56,7 +56,7 @@ const signAccessToken = (user_id,role) => {
         },
         config.AUTH_TOKEN_SECRET.ACCESS_TOKEN,
         {
-            expiresIn: '1h'
+            expiresIn: config.LIFE_TIME_TOKEN.ACCESS_TOKEN
         }
     );
 }

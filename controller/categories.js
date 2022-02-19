@@ -1,5 +1,5 @@
-const {Categories} = require('../model');
-
+const {Categories,Products} = require('../model');
+const {deleteProduct} = require('./product');
 const createCategory = async (req, res) => {
     try {
         const {name, description} = req.body;
@@ -28,10 +28,11 @@ const updateCategory = async (req, res) => {
         if (!category) {
             return res.status(400).json({success: false, message: "category not exists"})
         }
-        const {name, description} = req.body;
+        const {name, description, status} = req.body;
         await Categories.update({
             name: name || category.name,
-            description: description || category.description
+            description: description || category.description,
+            status: status || category.status
         },{
             where: {id: category_id}
         });
@@ -48,6 +49,12 @@ const deleteCategory = async (req, res) => {
         if (!category) {
             return res.status(400).json({success: false, message: "category not exists"})
         }
+        const products = await Products.findAll({where: {category_id: category_id}});
+        if (products) {
+            for (let product of products){
+                await deleteProduct(product.id);
+            }
+        };
         await Categories.destroy({
             where: {id: category_id}
         });

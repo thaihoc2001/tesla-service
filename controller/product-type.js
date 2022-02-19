@@ -1,5 +1,5 @@
-const {ProductType} = require('../model');
-
+const {ProductType,Products} = require('../model');
+const {deleteProduct} = require('./product')
 const createProductType = async (req, res) => {
     try {
         const {name, description} = req.body;
@@ -31,7 +31,8 @@ const updateProductType = async (req, res) => {
         const {name, description} = req.body;
         await ProductType.update({
             name: name || productType.name,
-            description: description || productType.description
+            description: description || productType.description,
+            status: status || productType.status
         },{
             where: {id: productType_id}
         });
@@ -43,10 +44,16 @@ const updateProductType = async (req, res) => {
 const deleteProductType = async (req, res) => {
     try {
         const {productType_id} = req.params;
-        const category = await ProductType.findByPk(productType_id);
-        if (!category) {
-            return res.status(400).json({success: false, message: "category not exists"})
+        const productType = await ProductType.findByPk(productType_id);
+        if (!productType) {
+            return res.status(400).json({success: false, message: "product_type not exists"})
         }
+        const products = await Products.findAll({where: {product_type_id: productType_id}});
+        if (products) {
+            for (let product of products){
+                await deleteProduct(product.id);
+            }
+        };
         await ProductType.destroy({
             where: {id: productType_id}
         });

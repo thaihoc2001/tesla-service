@@ -5,6 +5,6 @@ const {isAuthenticated,loginUser,changePassword,refreshTokenUser} = require('../
 
 router.post('/login',loginUser);
 router.post('/refreshToken',refreshTokenUser);
-router.post('/changePassword', isAuthenticated, changePassword);
+router.put('/changePassword', isAuthenticated, changePassword);
 
 module.exports = router;
