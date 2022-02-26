@@ -3,7 +3,7 @@ const {createImages} = require('./image');
 
 const createProduct = async (req, res) => {
     try {
-        const {name, price_old, price_new, description,category_id, product_type_id} = req.body;
+        const {name, price_old, price_new, description,category_id,quantity, product_type_id} = req.body;
         const files = req.files;
         const product = await Products.create({
             name: String(name),
@@ -11,7 +11,8 @@ const createProduct = async (req, res) => {
             price_new: Number(price_new),
             description: String(description),
             category_id: Number(category_id),
-            product_type_id: Number(product_type_id)
+            product_type_id: Number(product_type_id),
+            quantity: Number(quantity)
         });
         if (!product) throw Error("Error!");
         await createImages(files, product.id);
