@@ -2,10 +2,11 @@ const {ProductType,Products} = require('../model');
 const {deleteProduct} = require('./product')
 const createProductType = async (req, res) => {
     try {
-        const {name, description} = req.body;
+        const {name, description, status} = req.body;
         await ProductType.create({
             name,
-            description
+            description,
+            status
         });
         return res.status(200).json({success: true});
     }catch (err) {
