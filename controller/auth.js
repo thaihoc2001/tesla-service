@@ -1,4 +1,4 @@
-const {Users} = require('../model');
+const {Users, Account} = require('../model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
@@ -11,6 +11,7 @@ const isAuthenticated = async (req, res, next) => {
             if (user.role !== 'ADMIN'){
                 return res.status(400).json({success: false, message: "you do not have access"});
             }
+            req.user = user;
             return next();
         }
         return res.status(401).json({message: 'user not exist'});
@@ -28,7 +29,8 @@ const loginUser = async (req, res) => {
         if (!user){
             return res.status(400).json({message: 'user not exits'});
         }
-        let isCorrectPass = await bcrypt.compare(password, user.password);
+        const account = await Account.findByPk(user.account_id);
+        let isCorrectPass = await bcrypt.compare(password, account.password);
         if (!isCorrectPass){
             return res.status(400).json({message: 'Incorrect password'});
         }
@@ -65,18 +67,19 @@ const changePassword = async (req, res) => {
         const user_id = req.user.id;
         const {old_password,password} = req.body;
         const user = await Users.findByPk(user_id);
+        const account = await Account.findByPk(user.account_id);
         if (!old_password || !password) {
             return res.status(400).json("Incorrect information");
         }else {
-            const isCorrectPass = await bcrypt.compare(old_password, user.password);
+            const isCorrectPass = await bcrypt.compare(old_password, account.password);
             if (!isCorrectPass){
                 return res.status(400).json({message: "Incorrect password"});
             }else {
                 const hashPassword = await bcrypt.hash(password,10);
-                await Users.update({
+                await Account.update({
                     password: hashPassword,
                 },{
-                    where: {id: user_id}
+                    where: {id:account.id}
                 });
                 return res.status(200).json({success: true});
             }

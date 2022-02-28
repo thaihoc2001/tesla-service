@@ -1,4 +1,4 @@
-const {Users} = require('../model');
+const {Users, Account} = require('../model');
 const bcrypt = require('bcryptjs')
 const getUser = async (req, res) => {
     try {
@@ -16,12 +16,15 @@ const createUser = async (req, res) => {
             return res.status(400).json({success: false, message: "phone exists!"});
         }
         const hashPassword = await bcrypt.hash(password,10);
+        const account = await Account.create({
+            password: hashPassword
+        })
         const user = await Users.create({
             first_name: first_name,
             last_name: last_name,
             phone: phone,
             address: address,
-            password: hashPassword,
+            account_id: account.id,
             role: 'ADMIN'
         });
         if(!user) throw Error('Error!');
