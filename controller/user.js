@@ -1,9 +1,26 @@
 const {Users, Account} = require('../model');
 const bcrypt = require('bcryptjs')
-const getUser = async (req, res) => {
+const getCustomer = async (req, res) => {
     try {
-        const users = await Users.findAll();
+        const options = {
+            attributes: ['id','first_name', 'last_name', 'phone', 'address', 'role', 'created_at', 'updated_at'],
+            where: {role: 'customer'}
+        }
+        const users = await Users.findAll(options);
         return res.status(200).json(users);
+    }catch (err) {
+        return res.status(400).json(err);
+    }
+}
+const getUser = async (req, res) => {
+    try{
+        const user_id = req.user.id;
+        const options = {
+            attributes: ['id','first_name', 'last_name', 'phone', 'address', 'role', 'created_at', 'updated_at'],
+            where: {id: user_id}
+        }
+        const user = await Users.findOne(options);
+        return res.status(200).json(user);
     }catch (err) {
         return res.status(400).json(err);
     }
@@ -35,5 +52,6 @@ const createUser = async (req, res) => {
 }
 module.exports = {
     getUser,
-    createUser
+    createUser,
+    getCustomer
 }
