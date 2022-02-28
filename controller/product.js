@@ -1,5 +1,5 @@
 const {Products,Images} = require('../model');
-const {createImages} = require('./image');
+const {createImages,deleteImageOfProduct} = require('./image');
 
 const createProduct = async (req, res) => {
     try {
@@ -99,12 +99,34 @@ const deleteProducts = async (req, res) => {
 const deleteProduct = async (product_id) => {
     const product = await Products.findByPk(product_id);
     if (product){
-        await Images.destroy({
-            where: {product_id: product_id}
-        });
+        await deleteImageOfProduct(product_id);
         await Products.destroy({
             where: {id: product_id}
         })
+    }
+}
+const updateProduct = async (req, res) => {
+    try {
+        const {name, price_old, price_new, description,category_id,quantity, product_type_id} = req.body;
+        const {product_id} = req.params;
+        const product = await Products.findByPk(product_id);
+        if (!product_id){
+            return res.status(400).json({success: false, message: "product not exists"});
+        }
+        await Products.update({
+            name: name || product.name,
+            price_old: price_old || product.price_old,
+            price_new: price_new || product.price_new,
+            description: description || product.description,
+            category_id: category_id || product.category_id,
+            quantity: quantity || product.quantity,
+            product_type_id: product_type_id || product.product_type_id
+        }, {
+            where: {id: product_id}
+        });
+        return res.status(200).json({success: true});
+    }catch (err) {
+        return res.status(400).json(err);
     }
 }
 module.exports = {
@@ -114,6 +136,7 @@ module.exports = {
     getProductByCategory,
     getProductByType,
     deleteProducts,
-    deleteProduct
+    deleteProduct,
+    updateProduct
 }
 
