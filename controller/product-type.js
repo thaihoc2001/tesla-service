@@ -51,10 +51,8 @@ const deleteProductType = async (req, res) => {
         }
         const products = await Products.findAll({where: {product_type_id: productType_id}});
         if (products) {
-            for (let product of products){
-                await deleteProduct(product.id);
-            }
-        };
+            return res.status(400).json({success: false, message: 'need to delete all products in this category'});
+        }
         await ProductType.destroy({
             where: {id: productType_id}
         });

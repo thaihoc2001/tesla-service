@@ -44,7 +44,6 @@ const updateCategory = async (req, res) => {
 }
 const deleteCategory = async (req, res) => {
     try {
-        const user = req.user;
         const {category_id} = req.params;
         const category = await Categories.findByPk(category_id);
         if (!category) {
@@ -52,9 +51,7 @@ const deleteCategory = async (req, res) => {
         }
         const products = await Products.findAll({where: {category_id: category_id}});
         if (products) {
-            for (let product of products){
-                await deleteProduct(product.id);
-            }
+            return res.status(400).json({success: false, message: "need to delete all products in this category"});
         };
         await Categories.destroy({
             where: {id: category_id}
