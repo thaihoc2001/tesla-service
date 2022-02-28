@@ -89,10 +89,8 @@ const getProductByType = async (req, res) => {
 }
 const deleteProducts = async (req, res) => {
     try {
-        const {list_product_id} = req.body;
-        for (let product_id of list_product_id){
-            await deleteProduct(product_id);
-        }
+        const {product_id} = req.params;
+        await deleteProduct(product_id);
         return res.status(200).json({success: true});
     }catch (err) {
         return res.status(400).json(err);

@@ -8,5 +8,5 @@ router.get('/',getProducts);
 router.get('/:product_id',getProductById);
 router.get('/category/:category_id',getProductByCategory);
 router.get('/product_type/:product_type_id',getProductByType);
-router.delete('/',isAuthenticated,deleteProducts);
+router.delete('/:product_id',isAuthenticated,deleteProducts);
 module.exports = router;
