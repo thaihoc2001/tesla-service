@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         updatedAt: 'updated_at',
     });
     Users.associate = (models) => {
-        Users.hasMany(models.Orders, {
+        Users.hasOne(models.Orders, {
             as: 'orders',
             foreignKey: 'user_id'
         })
