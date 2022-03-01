@@ -1,5 +1,4 @@
-const {ProductType,Products} = require('../model');
-const {deleteProduct} = require('./product')
+const {ProductType,Products, Categories} = require('../model');
 const createProductType = async (req, res) => {
     try {
         const {name, description, status} = req.body;
@@ -61,9 +60,44 @@ const deleteProductType = async (req, res) => {
         return res.status(400).json(err);
     }
 }
+const getCategoriesOfProductType = async (req, res) => {
+    try {
+        let listProductType = [];
+        const list_product_type = await ProductType.findAll();
+        for (let product_type of list_product_type){
+            let categories = [];
+            const list_category_id = [];
+            const options = {
+                attributes: ['category_id'],
+                where: {product_type_id: product_type.id}}
+            const products = await Products.findAll(options);
+            for (let product of products){
+               if (list_category_id.indexOf(product.category_id) === -1){
+                   list_category_id.push(product.category_id);
+               }
+            }
+            for (let id of list_category_id){
+                const category = await Categories.findOne({
+                    attributes: ['id','name'],
+                    where: {id: id}
+                });
+                categories.push(category);
+            }
+            listProductType.push({
+                id: product_type.id,
+                name: product_type.name,
+                categories: categories
+            })
+        }
+        return res.status(200).json(listProductType);
+    }catch (err) {
+        return res.status(400).json(err);
+    }
+}
 module.exports = {
     createProductType,
     getProductType,
     updateProductType,
-    deleteProductType
+    deleteProductType,
+    getCategoriesOfProductType
 }
