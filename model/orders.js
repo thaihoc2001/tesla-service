@@ -25,5 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         createdAt: 'created_at',
         updatedAt: 'updated_at'
     });
+    Orders.associate = (models) => {
+        Orders.hasMany(models.OrderDetail, {
+            as: 'order-detail',
+            foreignKey: 'order_id'
+        })
+    }
     return Orders;
 }
