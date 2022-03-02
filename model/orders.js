@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         message: {
             type: DataTypes.STRING
+        },
+        total: {
+            type: DataTypes.BIGINT
         }
     }, {
         sequelize,
