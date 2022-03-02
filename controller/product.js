@@ -28,7 +28,28 @@ const getProducts = async (req, res) => {
                 model: Images,
                 as: 'images'
             }],
+            limit: 12,
+            order: [ [ 'created_at', 'DESC' ]],
             attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at']
+        }
+        const products = await Products.findAll(options);
+        return res.status(200).json(products);
+    }catch (err) {
+        return res.status(400).json(err);
+    }
+}
+const getSeeMoreProduct = async (req, res) => {
+    try {
+        const {count} = req.params;
+        const options = {
+            include: [{
+                model: Images,
+                as: 'images'
+            }],
+            attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
+            limit: 12,
+            offset: count,
+            order: [ [ 'created_at', 'DESC' ]]
         }
         const products = await Products.findAll(options);
         return res.status(200).json(products);
@@ -137,6 +158,7 @@ module.exports = {
     getProductByType,
     deleteProducts,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getSeeMoreProduct
 }
 
