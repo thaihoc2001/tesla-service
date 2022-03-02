@@ -23,12 +23,14 @@ const createProduct = async (req, res) => {
 }
 const getProducts = async (req, res) => {
     try {
+        const {limit, offset} = req.params;
         const options = {
             include: [{
                 model: Images,
                 as: 'images'
             }],
-            limit: 12,
+            limit: limit,
+            offset: offset,
             order: [ [ 'created_at', 'DESC' ]],
             attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at']
         }
