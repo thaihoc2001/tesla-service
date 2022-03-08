@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         status: {
             type: DataTypes.STRING
+        },
+        list_category_id: {
+            type: DataTypes.ARRAY(DataTypes.BIGINT)
         }
     }, {
         sequelize,

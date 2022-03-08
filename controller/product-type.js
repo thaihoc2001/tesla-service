@@ -5,18 +5,31 @@ const createProductType = async (req, res) => {
         await ProductType.create({
             name,
             description,
-            status
+            status,
+            list_category_id: []
         });
         return res.status(200).json({success: true});
     }catch (err) {
         return res.status(400).json(err);
     }
 }
+const updateListCategory = async (productType_id,category_id) => {
+    const productType = await ProductType.findByPk(productType_id);
+    const list = productType.list_category_id;
+    if (list.indexOf(category_id) === -1){
+        list.push(category_id);
+    }
+    await ProductType.update({
+        list_category_id: list
+    },{
+        where: {id: productType_id}
+    });
+}
 const getProductType = async (req, res) => {
     try {
-        const categories = await ProductType.findAll();
-        if (!categories) throw Error("Error!");
-        return res.status(200).json(categories);
+        const productType = await ProductType.findAll();
+        if (!productType) throw Error("Error!");
+        return res.status(200).json(productType);
     }catch (err) {
         return res.status(400).json(err);
     }
@@ -63,35 +76,25 @@ const deleteProductType = async (req, res) => {
 const getCategoriesOfProductType = async (req, res) => {
     try {
         let listProductType = [];
-        const list_product_type = await ProductType.findAll();
-        for (let product_type of list_product_type){
-            let categories = [];
-            const list_category_id = [];
-            const options = {
-                attributes: ['category_id'],
-                where: {product_type_id: product_type.id}}
-            const products = await Products.findAll(options);
-            for (let product of products){
-               if (list_category_id.indexOf(product.category_id) === -1){
-                   list_category_id.push(product.category_id);
-               }
-            }
-            for (let id of list_category_id){
-                const category = await Categories.findOne({
-                    attributes: ['id','name'],
-                    where: {id: id}
-                });
-                categories.push(category);
+        const productType = await ProductType.findAll();
+        for (let type of productType){
+            const categories = [];
+            for (let item of type.list_category_id){
+                const category = await Categories.findByPk(item);
+                categories.push({
+                    id: category.id,
+                    name: category.name
+                })
             }
             listProductType.push({
-                id: product_type.id,
-                name: product_type.name,
+                id: type.id,
+                name: type.name,
                 categories: categories
             })
         }
         return res.status(200).json(listProductType);
     }catch (err) {
-        return res.status(400).json(err);
+        return res.status(400).json(err.toString());
     }
 }
 module.exports = {
@@ -99,5 +102,6 @@ module.exports = {
     getProductType,
     updateProductType,
     deleteProductType,
-    getCategoriesOfProductType
+    getCategoriesOfProductType,
+    updateListCategory
 }

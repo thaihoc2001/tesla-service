@@ -1,6 +1,6 @@
 const {Products,Images} = require('../model');
 const {createImages,deleteImageOfProduct} = require('./image');
-
+const {updateListCategory} = require('../controller/product-type');
 const createProduct = async (req, res) => {
     try {
         const {name, price_old, price_new, description,category_id,quantity, product_type_id} = req.body;
@@ -16,6 +16,7 @@ const createProduct = async (req, res) => {
         });
         if (!product) throw Error("Error!");
         await createImages(files, product.id);
+        await updateListCategory(product_type_id, category_id);
         return res.status(200).json({success: true});
     }catch (err) {
         return res.status(400).json(err.toString());
@@ -49,7 +50,7 @@ const getSeeMoreProduct = async (req, res) => {
                 as: 'images'
             }],
             attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
-            limit: 12,
+            limit: 6,
             offset: count,
             order: [ [ 'created_at', 'DESC' ]]
         }
@@ -78,12 +79,14 @@ const getProductById = async (req, res) => {
 }
 const getProductByCategory = async (req, res) => {
     try {
-        const {category_id} = req.params;
+        const {category_id, count} = req.params;
         const options = {
             include: [{
                 model: Images,
                 as: 'images'
             }],
+            limit: 3,
+            offset: count,
             attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
             where: {category_id: category_id}
         }
@@ -95,12 +98,14 @@ const getProductByCategory = async (req, res) => {
 }
 const getProductByType = async (req, res) => {
     try {
-        const {product_type_id} = req.params;
+        const {product_type_id, count} = req.params;
         const options = {
             include: [{
                 model: Images,
                 as: 'images'
             }],
+            limit: 3,
+            offset: count,
             attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
             where: {product_type_id: product_type_id}
         }
@@ -161,6 +166,6 @@ module.exports = {
     deleteProducts,
     deleteProduct,
     updateProduct,
-    getSeeMoreProduct
+    getSeeMoreProduct,
 }
 
