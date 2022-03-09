@@ -157,6 +157,50 @@ const updateProduct = async (req, res) => {
         return res.status(400).json(err);
     }
 }
+const getProductByCategoryAndType = async (req, res) => {
+    try{
+        const { listCategory, type_id,limit} = req.query;
+        const {count} = req.params;
+        console.log(limit);
+        let queries
+        if (listCategory !== 'undefined' && listCategory){
+            let arr = listCategory.split('and');
+            const categories_id = arr.map((element, index) => {
+                return Number(element);
+            });
+            queries ={product_type_id: type_id,category_id: categories_id}
+        }else {
+            queries ={product_type_id: type_id}
+        }
+        let options;
+        if (limit ==='true'){
+            options = {
+                include: [{
+                    model: Images,
+                    as: 'images'
+                }],
+                limit: 1,
+                offset: count,
+                attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
+                where: queries
+            }
+        }else {
+            options = {
+                include: [{
+                    model: Images,
+                    as: 'images'
+                }],
+                offset: count,
+                attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
+                where: queries
+            }
+        }
+        const products = await Products.findAll(options);
+        return res.status(200).json(products);
+    }catch (err){
+        return res.status(400).json(err.toString());
+    }
+}
 module.exports = {
     createProduct,
     getProducts,
@@ -167,5 +211,6 @@ module.exports = {
     deleteProduct,
     updateProduct,
     getSeeMoreProduct,
+    getProductByCategoryAndType
 }
 
