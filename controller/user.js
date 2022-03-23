@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs')
 const getCustomer = async (req, res) => {
     try {
         const options = {
-            attributes: ['id','first_name', 'last_name', 'phone', 'address', 'role', 'created_at', 'updated_at'],
             where: {role: 'customer'}
         }
         const users = await Users.findAll(options);
@@ -16,7 +15,6 @@ const getUser = async (req, res) => {
     try{
         const user_id = req.user.id;
         const options = {
-            attributes: ['id','first_name', 'last_name', 'phone', 'address', 'role', 'created_at', 'updated_at'],
             where: {id: user_id}
         }
         const user = await Users.findOne(options);
@@ -27,24 +25,25 @@ const getUser = async (req, res) => {
 }
 const createUser = async (req, res) => {
     try {
-        const {first_name,last_name,phone,address,password} = req.body;
+        const {first_name,last_name,phone,address,password, ward_id} = req.body;
         const user_phone = await Users.findOne({where: {phone: phone}});
         if (user_phone){
             return res.status(400).json({success: false, message: "phone exists!"});
         }
         const hashPassword = await bcrypt.hash(password,10);
-        const account = await Account.create({
-            password: hashPassword
-        })
         const user = await Users.create({
             first_name: first_name,
             last_name: last_name,
             phone: phone,
             address: address,
-            account_id: account.id,
+            ward_id: ward_id,
             role: 'ADMIN'
         });
         if(!user) throw Error('Error!');
+        const account = await Account.create({
+            user_id: user.id,
+            password: hashPassword
+        })
         return res.status(200).json({success: true});
     }catch (err) {
         return res.status(400).json({success: false, message: err.toString()});

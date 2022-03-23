@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         address: {
             type: DataTypes.STRING,
         },
-        account_id: {
+        ward_id: {
             type: DataTypes.BIGINT
         },
         role: {
@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
     Users.associate = (models) => {
         Users.hasOne(models.Orders, {
             as: 'orders',
+            foreignKey: 'user_id'
+        });
+        Users.hasOne(models.Account,{
+            as: 'account',
             foreignKey: 'user_id'
         })
     }

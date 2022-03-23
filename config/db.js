@@ -1,15 +1,19 @@
 require('dotenv').config();
 module.exports = {
     DB: {
-        URL: process.env.PRODUCTION_DATABASE_URL,
+        database: process.env.DB_DATABASE_NAME,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
         CONFIG: {
-            logging: true,
+            host: 'my-database-tesla.cn5tyhlgjnd6.us-west-2.rds.amazonaws.com',
+            ssl: true,
+            dialect: "postgres",
             dialectOptions: {
                 ssl: {
-                    require: true,
                     rejectUnauthorized: false
                 }
-            }
+            },
+            logging: console.log,
         }
     }
 };

@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) =>{
         },
         password: {
             type: DataTypes.STRING
+        },
+        user_id: {
+            type: DataTypes.BIGINT
         }
     },{
         sequelize,
@@ -19,11 +22,5 @@ module.exports = (sequelize, DataTypes) =>{
         createdAt: 'created_at',
         updatedAt: 'updated_at'
     });
-    Account.associate = (model) => {
-        Account.hasOne(model.Users, {
-            as: 'users',
-            foreignKey: 'account_id'
-        })
-    }
     return Account;
 }
