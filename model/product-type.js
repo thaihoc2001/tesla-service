@@ -17,13 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         status: {
             type: DataTypes.STRING
-        },
-        list_category_id: {
-            type: DataTypes.ARRAY(DataTypes.BIGINT)
         }
     }, {
         sequelize,
-        tableName: 'product-type',
+        tableName: 'product_type',
         underscored: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at'
@@ -31,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     ProductType.associate = (models) => {
         ProductType.hasMany(models.Products, {
             as: 'products',
-            foreignKey: 'productType_id'
+            foreignKey: 'product_type_id'
         })
     }
     return ProductType;

@@ -31,6 +31,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         quantity: {
             type: DataTypes.BIGINT
+        },
+        quantity_sold: {
+            type: DataTypes.BIGINT
         }
     }, {
         sequelize,
@@ -45,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'product_id',
         });
         Products.hasMany(models.OrderDetail, {
-            as: 'order-detail',
+            as: 'order_detail',
             foreignKey: 'product_id'
         })
     }
