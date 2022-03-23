@@ -29,7 +29,7 @@ const loginUser = async (req, res) => {
         if (!user){
             return res.status(400).json({message: 'user not exits'});
         }
-        const account = await Account.findByPk(user.account_id);
+        const account = await Account.findOne({where: {user_id: user.id}});
         let isCorrectPass = await bcrypt.compare(password, account.password);
         if (!isCorrectPass){
             return res.status(400).json({message: 'Incorrect password'});
@@ -98,7 +98,6 @@ const refreshTokenUser = async (req, res) => {
         return res.status(400).json({message: err.toString()});
     }
 }
-
 module.exports = {
     isAuthenticated,
     loginUser,
