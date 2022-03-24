@@ -67,7 +67,7 @@ const changePassword = async (req, res) => {
         const user_id = req.user.id;
         const {old_password,password} = req.body;
         const user = await Users.findByPk(user_id);
-        const account = await Account.findByPk(user.account_id);
+        const account = await Account.findOne({where: {user_id: user.id}});
         if (!old_password || !password) {
             return res.status(400).json("Incorrect information");
         }else {

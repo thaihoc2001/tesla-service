@@ -1,6 +1,5 @@
 const {Products,Images} = require('../model');
 const {createImages,deleteImageOfProduct} = require('./image');
-const {updateListCategory} = require('../controller/product-type');
 const createProduct = async (req, res) => {
     try {
         const {name, price_old, price_new, description,category_id,quantity, product_type_id} = req.body;
@@ -12,11 +11,11 @@ const createProduct = async (req, res) => {
             description: String(description),
             category_id: Number(category_id),
             product_type_id: Number(product_type_id),
+            quantity_sold: 0,
             quantity: Number(quantity)
         });
         if (!product) throw Error("Error!");
         await createImages(files, product.id);
-        await updateListCategory(product_type_id, category_id);
         return res.status(200).json({success: true});
     }catch (err) {
         return res.status(400).json(err.toString());
@@ -24,35 +23,15 @@ const createProduct = async (req, res) => {
 }
 const getProducts = async (req, res) => {
     try {
-        const {limit, offset} = req.params;
-        const options = {
-            include: [{
-                model: Images,
-                as: 'images'
-            }],
-            limit: limit,
-            offset: offset,
-            order: [ [ 'created_at', 'DESC' ]],
-            attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at']
-        }
-        const products = await Products.findAll(options);
-        return res.status(200).json(products);
-    }catch (err) {
-        return res.status(400).json(err);
-    }
-}
-const getSeeMoreProduct = async (req, res) => {
-    try {
         const {count} = req.params;
         const options = {
             include: [{
                 model: Images,
                 as: 'images'
             }],
-            attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
             limit: 6,
             offset: count,
-            order: [ [ 'created_at', 'DESC' ]]
+            order: [ [ 'created_at', 'DESC' ]],
         }
         const products = await Products.findAll(options);
         return res.status(200).json(products);
@@ -68,10 +47,9 @@ const getProductById = async (req, res) => {
                 model: Images,
                 as: 'images'
             }],
-            attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
             where: {id: product_id}
         }
-        const product = await Products.findAll(options);
+        const product = await Products.findOne(options);
         return res.status(200).json(product);
     }catch (err) {
         return res.status(400).json(err);
@@ -85,9 +63,8 @@ const getProductByCategory = async (req, res) => {
                 model: Images,
                 as: 'images'
             }],
-            limit: 3,
+            limit: 12,
             offset: count,
-            attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
             where: {category_id: category_id}
         }
         const products = await Products.findAll(options);
@@ -104,9 +81,8 @@ const getProductByType = async (req, res) => {
                 model: Images,
                 as: 'images'
             }],
-            limit: 3,
+            limit: 12,
             offset: count,
-            attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
             where: {product_type_id: product_type_id}
         }
         const products = await Products.findAll(options);
@@ -210,7 +186,6 @@ module.exports = {
     deleteProducts,
     deleteProduct,
     updateProduct,
-    getSeeMoreProduct,
     getProductByCategoryAndType
 }
 
