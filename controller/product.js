@@ -1,4 +1,4 @@
-const {Products,Images} = require('../model');
+const {Products,Images,ProductDetail} = require('../model');
 const {createImages,deleteImageOfProduct} = require('./image');
 const createProduct = async (req, res) => {
     try {
@@ -28,7 +28,11 @@ const getProducts = async (req, res) => {
             include: [{
                 model: Images,
                 as: 'images'
-            }],
+            },
+                {
+                    model: ProductDetail,
+                    as: 'product_detail'
+                }],
             limit: 6,
             offset: count,
             order: [ [ 'created_at', 'DESC' ]],
@@ -46,7 +50,12 @@ const getProductById = async (req, res) => {
             include: [{
                 model: Images,
                 as: 'images'
-            }],
+            },
+                {
+                    model: ProductDetail,
+                    as: 'product_detail'
+                }
+            ],
             where: {id: product_id}
         }
         const product = await Products.findOne(options);
@@ -62,7 +71,12 @@ const getProductByCategory = async (req, res) => {
             include: [{
                 model: Images,
                 as: 'images'
-            }],
+            },
+                {
+                    model: ProductDetail,
+                    as: 'product_detail'
+                }
+                ],
             limit: 12,
             offset: count,
             where: {category_id: category_id}
@@ -80,7 +94,11 @@ const getProductByType = async (req, res) => {
             include: [{
                 model: Images,
                 as: 'images'
-            }],
+            },
+                {
+                    model: ProductDetail,
+                    as: 'product_detail'
+                }],
             limit: 12,
             offset: count,
             where: {product_type_id: product_type_id}
