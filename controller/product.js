@@ -121,6 +121,7 @@ const deleteProducts = async (req, res) => {
 const deleteProduct = async (product_id) => {
     const product = await Products.findByPk(product_id);
     if (product){
+        await ProductDetail.destroy({where: {product_id: product_id}});
         await deleteImageOfProduct(product_id);
         await Products.destroy({
             where: {id: product_id}
