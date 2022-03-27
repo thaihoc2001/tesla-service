@@ -50,7 +50,8 @@ const updateImage = async (req, res) => {
         }, {
             where: {id: image_id}
         })
-        return res.status(200).json({success: true});
+        const imageNew = await Images.findByPk(image_id);
+        return res.status(200).json(imageNew);
     }catch (err) {
         return res.status(400).json(err);
     }
@@ -67,13 +68,13 @@ const addImage = async (req, res) => {
         const {product_id} = req.body;
         const file = req.file;
         const result = await cloudinary.uploader.upload(file.path);
-        await Images.create({
+        const image = await Images.create({
             url: result.secure_url,
             cloudinary_id: result.public_id,
             type: 'Secondary',
             product_id: product_id
         });
-        return res.status(200).json({success: true});
+        return res.status(200).json(image);
     }catch (err) {
         return res.status(400).json(err);
     }

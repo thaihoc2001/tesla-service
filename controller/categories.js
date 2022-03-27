@@ -2,12 +2,12 @@ const {Categories,Products} = require('../model');
 const createCategory = async (req, res) => {
     try {
         const {name, description, status} = req.body;
-        await Categories.create({
+        const category = await Categories.create({
             name,
             description,
             status
         });
-        return res.status(200).json({success: true});
+        return res.status(200).json(category);
     }catch (err) {
         return res.status(400).json(err);
     }
@@ -36,7 +36,8 @@ const updateCategory = async (req, res) => {
         },{
             where: {id: category_id}
         });
-        return res.status(200).json({success: true});
+        const data = await Categories.findByPk(category_id);
+        return res.status(200).json(data);
     }catch (err) {
         return res.status(400).json(err);
     }

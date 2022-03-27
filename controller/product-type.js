@@ -2,12 +2,12 @@ const {ProductType,Products, Categories} = require('../model');
 const createProductType = async (req, res) => {
     try {
         const {name, description, status} = req.body;
-        await ProductType.create({
+        const productType = await ProductType.create({
             name,
             description,
             status
         });
-        return res.status(200).json({success: true});
+        return res.status(200).json(productType);
     }catch (err) {
         return res.status(400).json(err);
     }
@@ -36,7 +36,8 @@ const updateProductType = async (req, res) => {
         },{
             where: {id: productType_id}
         });
-        return res.status(200).json({success: true});
+        const productTypeNew = await ProductType.findByPk(productType_id);
+        return res.status(200).json(productTypeNew);
     }catch (err) {
         return res.status(400).json(err);
     }

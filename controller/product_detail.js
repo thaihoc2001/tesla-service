@@ -3,7 +3,7 @@ const {ProductDetail} = require('../model');
 const createProductDetail = async (req, res) => {
     try {
         const {product_id, brake, rim, battery, capacity, power, dimension, range, charging, weight} = req.body;
-        await ProductDetail.create({
+        const product_detail = await ProductDetail.create({
             product_id,
             brake,
             rim,
@@ -15,7 +15,7 @@ const createProductDetail = async (req, res) => {
             charging,
             weight
         });
-        return res.status(200).json({success: true});
+        return res.status(200).json(product_detail);
     }catch (err) {
         return res.status(400).json(err);
     }
@@ -41,7 +41,8 @@ const updateProductDetail = async (req, res) => {
         },{
             where: {product_id: product_id}
         });
-        return res.status(200).json({success: true});
+        const productDetailNew = await ProductDetail.findOne({where: {product_id: product_id}});
+        return res.status(200).json(productDetailNew);
     }catch (err) {
         return res.status(400).json(err);
     }

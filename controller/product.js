@@ -2,7 +2,7 @@ const {Products,Images,ProductDetail} = require('../model');
 const {createImages,deleteImageOfProduct} = require('./image');
 const createProduct = async (req, res) => {
     try {
-        const {name, price_old, price_new, description,category_id,quantity, product_type_id} = req.body;
+        const {name, price_old, price_new, description,category_id,quantity, product_type_id, status} = req.body;
         const files = req.files;
         const product = await Products.create({
             name: String(name),
@@ -12,11 +12,25 @@ const createProduct = async (req, res) => {
             category_id: Number(category_id),
             product_type_id: Number(product_type_id),
             quantity_sold: 0,
-            quantity: Number(quantity)
+            quantity: Number(quantity),
+            status: status
         });
         if (!product) throw Error("Error!");
         await createImages(files, product.id);
-        return res.status(200).json({success: true});
+        const options = {
+            include: [{
+                model: Images,
+                as: 'images'
+            },
+                {
+                    model: ProductDetail,
+                    as: 'product_detail'
+                }
+            ],
+            where: {id: product.id}
+        }
+        const productNew = await Products.findOne(options);
+        return res.status(200).json(productNew);
     }catch (err) {
         return res.status(400).json(err.toString());
     }
@@ -147,7 +161,20 @@ const updateProduct = async (req, res) => {
         }, {
             where: {id: product_id}
         });
-        return res.status(200).json({success: true});
+        const options = {
+            include: [{
+                model: Images,
+                as: 'images'
+            },
+                {
+                    model: ProductDetail,
+                    as: 'product_detail'
+                }
+            ],
+            where: {id: product_id}
+        }
+        const productNew = await Products.findOne(options);
+        return res.status(200).json(productNew);
     }catch (err) {
         return res.status(400).json(err);
     }
