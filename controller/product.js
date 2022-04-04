@@ -1,5 +1,6 @@
 const {Products,Images,ProductDetail} = require('../model');
 const {createImages,deleteImageOfProduct} = require('./image');
+const {updateListCategoryOfProductType} = require('./product-type')
 const createProduct = async (req, res) => {
     try {
         const {name, price_old, price_new, description,category_id,quantity, product_type_id, status} = req.body;
@@ -17,6 +18,7 @@ const createProduct = async (req, res) => {
         });
         if (!product) throw Error("Error!");
         await createImages(files, product.id);
+        await updateListCategoryOfProductType(Number(category_id), Number(product_type_id));
         const options = {
             include: [{
                 model: Images,

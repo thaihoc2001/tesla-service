@@ -61,9 +61,34 @@ const deleteProductType = async (req, res) => {
         return res.status(400).json(err);
     }
 }
+const updateListCategoryOfProductType = async (category_id,type_id) => {
+    const type = await ProductType.findByPk(type_id);
+    const category = await Categories.findByPk(category_id);
+    let array = type.list_category;
+    if (array !== null){
+        const result = array.find(({ id }) => id === category_id);
+        if (!result){
+            array.push({id: category_id, name: category.name});
+            await ProductType.update({
+                list_category: array
+            },{
+                where: {id: type_id}
+            });
+        }
+    }else {
+        array = [];
+        array.push({id: category_id, name: category.name});
+        await ProductType.update({
+            list_category: array
+        },{
+            where: {id: type_id}
+        });
+    }
+}
 module.exports = {
     createProductType,
     getProductType,
     updateProductType,
-    deleteProductType
+    deleteProductType,
+    updateListCategoryOfProductType
 }
