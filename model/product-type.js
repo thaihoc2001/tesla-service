@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING
         },
         list_category:{
-            type: DataTypes.ARRAY(DataTypes.TEXT)
+            type: DataTypes.ARRAY(DataTypes.JSON)
         }
     }, {
         sequelize,

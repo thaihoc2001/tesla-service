@@ -49,7 +49,7 @@ const getProducts = async (req, res) => {
                     model: ProductDetail,
                     as: 'product_detail'
                 }],
-            limit: 6,
+            limit: 9,
             offset: count,
             order: [ [ 'created_at', 'DESC' ]],
         }
@@ -93,7 +93,7 @@ const getProductByCategory = async (req, res) => {
                     as: 'product_detail'
                 }
                 ],
-            limit: 12,
+            limit: 9,
             offset: count,
             where: {category_id: category_id}
         }
@@ -115,7 +115,7 @@ const getProductByType = async (req, res) => {
                     model: ProductDetail,
                     as: 'product_detail'
                 }],
-            limit: 12,
+            limit: 9,
             offset: count,
             where: {product_type_id: product_type_id}
         }
@@ -203,7 +203,7 @@ const getProductByCategoryAndType = async (req, res) => {
                     model: Images,
                     as: 'images'
                 }],
-                limit: 1,
+                limit: 9,
                 offset: count,
                 attributes: ['id','name','price_old','price_new','description','category_id','product_type_id','status','quantity','created_at','updated_at'],
                 where: queries
@@ -225,6 +225,46 @@ const getProductByCategoryAndType = async (req, res) => {
         return res.status(400).json(err.toString());
     }
 }
+const getProductsByStatus = async (req, res) =>{
+    try {
+        const {count,status} = req.params;
+        const options = {
+            include: [{
+                model: Images,
+                as: 'images'
+            },
+                {
+                    model: ProductDetail,
+                    as: 'product_detail'
+                }],
+            limit: 9,
+            offset: count,
+            where: {status: status}
+        }
+        const products = await Products.findAll(options);
+        return res.status(200).json(products);
+    }catch (err) {
+        return res.status(400).json(err);
+    }
+}
+const getAllProduct = async (req, res) =>{
+    try {
+        const options = {
+            include: [{
+                model: Images,
+                as: 'images'
+            },
+                {
+                    model: ProductDetail,
+                    as: 'product_detail'
+                }],
+        }
+        const products = await Products.findAll(options);
+        return res.status(200).json(products);
+    }catch (err) {
+        return res.status(400).json(err);
+    }
+}
 module.exports = {
     createProduct,
     getProducts,
@@ -234,6 +274,8 @@ module.exports = {
     deleteProducts,
     deleteProduct,
     updateProduct,
-    getProductByCategoryAndType
+    getProductByCategoryAndType,
+    getAllProduct,
+    getProductsByStatus
 }
 
