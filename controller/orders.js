@@ -22,19 +22,19 @@ const createOrder = async (req, res) => {
         for (let product of list_product){
             await OrderDetail.create({
                 order_id: order.id,
-                product_id: product.id,
+                product_id: product.product_id,
                 quantity: product.quantity
             });
-            const item  = await Products.findByPk(product.id);
+            const item  = await Products.findByPk(product.product_id);
             await Products.update({
                 quantity: (item.quantity - product.quantity)
             }, {
-                where: {id: product.id}
+                where: {id: product.product_id}
             });
         }
         return res.status(200).json({success: true});
     }catch (err) {
-        return res.status(400).json(err);
+        return res.status(400).json(err.toString());
     }
 }
 const getOrder = async (req, res) => {
