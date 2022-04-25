@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         total: {
             type: DataTypes.BIGINT
+        },
+        shipping_method: {
+            type: DataTypes.STRING
+        },
+        payment_method: {
+            type: DataTypes.STRING
         }
     }, {
         sequelize,

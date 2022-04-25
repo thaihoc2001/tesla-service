@@ -2,7 +2,7 @@ const {Orders, Users, OrderDetail, Products} = require('../model');
 
 const createOrder = async (req, res) => {
     try {
-        const {first_name, last_name, phone, address,message, list_product, total} = req.body;
+        const {first_name, last_name, phone, address,email,message,payment_method,shipping_method, list_product, total} = req.body;
         if (list_product.length === 0){
             return res.status(400).json({success: false, message: "You have not entered the product you want to buy"});
         }
@@ -12,12 +12,15 @@ const createOrder = async (req, res) => {
             phone: phone,
             address: address,
             role: 'customer',
+            email: email
         });
         const order = await Orders.create({
             status: 'NEW',
             message: message,
             user_id: user.id,
-            total: total
+            total: total,
+            payment_method,
+            shipping_method
         });
         for (let product of list_product){
             await OrderDetail.create({
@@ -53,7 +56,7 @@ const getOrder = async (req, res) => {
                     ]
                 }
             ],
-            attributes: ['id', 'first_name', 'last_name', 'phone','address'],
+            attributes: ['id', 'first_name', 'last_name', 'phone','address','email'],
             order: [ [ 'created_at', 'DESC' ]],
             where: {role: 'customer'}
         }
